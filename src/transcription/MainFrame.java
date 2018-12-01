@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.util.*;
 
 public class MainFrame extends JFrame{
-	public FindStartCodon startCodon;
 	MainFrame(){
 		int whereStart, whereEnd;
 		String token[];
@@ -26,7 +25,8 @@ public class MainFrame extends JFrame{
 		container.add(tokenTField);
 		container.add(threePrimeLabel);
 		
-//		FindStartCodon("AUG");
+		FindStartCodon("AUG");
+		
 		
 		setFocusable(true);
 		requestFocus();
