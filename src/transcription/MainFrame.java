@@ -14,7 +14,7 @@ public class MainFrame extends JFrame{
 		setSize(800,600);
 		setLayout(null);
 		
-		JLabel fivePrimeLabel = new JLabel("전사 mRNA : 5' - ");
+		JLabel fivePrimeLabel = new JLabel("�쟾�궗 mRNA : 5' - ");
 		fivePrimeLabel.setBounds(20,40,100,40);
 		JTextField tokenTField = new JTextField();
 		tokenTField.setBounds(120,40,600,40);
@@ -25,13 +25,11 @@ public class MainFrame extends JFrame{
 		container.add(tokenTField);
 		container.add(threePrimeLabel);
 		
-		FindStartCodon(this, "AUG");
-		
-		
 		setFocusable(true);
 		requestFocus();
 		setVisible(true);
 	}
+	
 	public static void main(String[] args) {
 		new MainFrame();
 	}
