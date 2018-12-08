@@ -6,7 +6,7 @@ import java.util.*;
 
 public class MainFrame extends JFrame{
 	MainFrame(){
-		int whereStart, whereEnd;
+		int whereStart = 0, whereEnd = 0;
 		String token[];
 		setTitle("My Own Transcription Helper Program");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,7 +25,7 @@ public class MainFrame extends JFrame{
 		container.add(tokenTField);
 		container.add(threePrimeLabel);
 		
-		FindStartCodon("AUG");
+		FindStartCodon(this, "AUG");
 		
 		
 		setFocusable(true);
