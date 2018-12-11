@@ -7,13 +7,25 @@ public class GeneticDecoder {
 
 	public GeneticDecoder() {}
 
-	public void setInputValue(String input) { this.input = input.toUpperCase(); }
+	public void setInputValue(String input) { this.input = input.toUpperCase();}
 
 	private Boolean isValid() {
-		if (input == null) return false; //input°ªÀÌ ÁöÁ¤µÇÁö ¾ÊÀº »óÅÂÀÌ¸é À¯È¿ÇÏÁö ¾ÊÀ½
-		if (!onlyAGCT()) return false; //AGCT ÀÌ¿ÜÀÇ ¹®ÀÚ Æ÷ÇÔÇÒ ½Ã À¯È¿ÇÏÁö ¾ÊÀ½
-		if ((startIndex = findInitCodonIdx()) == -1) return false; //°³½Ã ÄÚµ· ¾øÀ» ½Ã À¯È¿ÇÏÁö ¾ÊÀ½
-		if ((endIndex = findTermCodonIdx()) == -1) return false; //Á¾°á ÄÚµ· ¾øÀ» ½Ã À¯È¿ÇÏÁö ¾ÊÀ½
+		if (input == null) {
+			System.out.println("NULL ì˜¤ë¥˜");
+			return false; // inputê°’ì´ ì§€ì •ë˜ì§€ ì•Šì€ ê²½ìš° false ë°˜í™˜
+		}
+		if (!onlyAGCT()) {
+			System.out.println("AGTC ì˜¤ë¥˜");
+			return false; // AGCT ì´ì™¸ì˜ ë¬¸ìê°€ í¬í•¨ëœ ê²½ìš° false ë°˜í™˜
+		}
+		if ((startIndex = findInitCodonIdx()) == -1) {
+			System.out.println("ê°œì‹œ ì½”ëˆ ì˜¤ë¥˜");
+			return false; // ê°œì‹œ ì½”ëˆì´ ì—†ì„ ê²½ìš° false ë°˜í™˜
+		}
+		if ((endIndex = findTermCodonIdx()) == -1) {
+			System.out.println("ì¢…ê²° ì½”ëˆ ì˜¤ë¥˜");
+			return false; // ì¢…ê²° ì½”ëˆì´ ì—†ì„ ê²½ìš° false ë°˜í™˜
+		}
 		
 		return true;
 	}
@@ -37,9 +49,8 @@ public class GeneticDecoder {
 		return idx;
 	}
 	
-	private void transcript() {
+	public String transcript() {
 		StringBuilder builder = new StringBuilder();
-
 		for (int i = 0; i < input.length(); i++)
 			switch (input.charAt(i)) {
 				case 'A': builder.append('U'); break;
@@ -47,72 +58,73 @@ public class GeneticDecoder {
 				case 'C': builder.append('G'); break;
 				case 'T': builder.append('A'); break;
 			}
-
+//			if(input.charAt(i)=='A') builder.append('U');
+//			else if(input.charAt(i)=='G') builder.append('C');
+//			else if(input.charAt(i)=='C') builder.append('G');
+//			else if(input.charAt(i)=='T') builder.append('A');
+//			
 		input = builder.toString();
-	}
-	
+		return input;
+		}
+
 	private String codon(String code) {
 		switch (code) {
 			case "AAA": 
-			case "AAG": return "¶óÀÌ½Å";
-			case "AAC": case "AAU": return "¾Æ½ºÆÄ¶ó±ä";
+			case "AAG": return "ë¼ì´ì‹ ";
+			case "AAC": case "AAU": return "ì•„ìŠ¤íŒŒë¼ê¸´";
 			//AA*
-			case "AGA": case "AGG": return "¾Æ¸£Áö´Ñ";
-			case "AGC": case "AGU": return "¼¼¸°";
+			case "AGA": case "AGG": return "ì•„ë¥´ì§€ë‹Œ";
+			case "AGC": case "AGU": return "ì„¸ë¦°";
 			//AG*
-			case "ACA": case "ACG": case "ACC": case "ACU": return "Æ®·¹¿À´Ñ";
+			case "ACA": case "ACG": case "ACC": case "ACU": return "íŠ¸ë ˆì˜¤ë‹Œ";
 			//AC*
-			case "AUA": case "AUC": case "AUU": return "¾ÆÀÌ¼Ò·ù½Å";
-			case "AUG": return "¸Ş½ÎÀÌ¿À´Ñ";
+			case "AUA": case "AUC": case "AUU": return "ì•„ì´ì†Œë¥˜ì‹ ";
+			case "AUG": return "ë©”ì‹¸ì´ì˜¤ë‹Œ(ê°œì‹œ)";
 			//AU*
 			//A**
-			case "GAA": case "GAG": return "±Û·çÅ½»ê";
-			case "GAC": case "GAU": return "¾Æ½ºÆÄÆ®»ê";
+			case "GAA": case "GAG": return "ê¸€ë£¨íƒì‚°";
+			case "GAC": case "GAU": return "ì•„ìŠ¤íŒŒíŠ¸ì‚°";
 			//GA*
-			case "GGA": case "GGG": case "GGC": case "GGU": return "±Û¶óÀÌ½Å";
+			case "GGA": case "GGG": case "GGC": case "GGU": return "ê¸€ë¼ì´ì‹ ";
 			//GG*
-			case "GCA": case "GCG": case "GCC": case "GCU": return "¾Ë¶ó´Ñ";
+			case "GCA": case "GCG": case "GCC": case "GCU": return "ì•Œë¼ë‹Œ";
 			//GC*
-			case "GUA": case "GUG": case "GUC": case "GUU": return "¹ß¸°";
+			case "GUA": case "GUG": case "GUC": case "GUU": return "ë°œë¦°";
 			//GU*
 			//G**
-			case "CAA": case "CAG": return "±Û·çÅ¸¹Î";
-			case "CAC": case "CAU": return "È÷½ºÆ¼µò";
+			case "CAA": case "CAG": return "ê¸€ë£¨íƒ€ë¯¼";
+			case "CAC": case "CAU": return "íˆìŠ¤í‹°ë”˜";
 			///CA*
-			case "CGA": case "CGG": case "CGC": case "CGU": return "¾Æ¸£Áö´Ñ";
+			case "CGA": case "CGG": case "CGC": case "CGU": return "ì•„ë¥´ì§€ë‹Œ";
 			//CG*
-			case "CCA": case "CCG": case "CCC": case "CCU": return "ÇÁ·Ñ¸°";
+			case "CCA": case "CCG": case "CCC": case "CCU": return "í”„ë¡¤ë¦°";
 			//CC*
-			case "CUA": case "CUG": case "CUC": case "CUU": return "·ù½Å";
+			case "CUA": case "CUG": case "CUC": case "CUU": return "ë¥˜ì‹ ";
 			//CU*
 			//C**
-			case "UAA": case "UAG": return "Á¾°á";
-			case "UAC": case "UAU": return "Å¸ÀÌ·Î½Å";
+			case "UAA": case "UAG": return "(ì¢…ê²°)";
+			case "UAC": case "UAU": return "íƒ€ì´ë¡œì‹ ";
 			//UA*
-			case "UGA": return "Á¾°á";
-			case "UGG": return "Æ®¸³ÅäÇÉ";
-			case "UGC": case "UGU": return "½Ã½ºÅ×ÀÎ";
+			case "UGA": return "(ì¢…ê²°)";
+			case "UGG": return "íŠ¸ë¦½í† íŒ";
+			case "UGC": case "UGU": return "ì‹œìŠ¤í…Œì¸";
 			//UG*
-			case "UCA": case "UCG": case "UCC": case "UCU": return "¼¼¸°";
+			case "UCA": case "UCG": case "UCC": case "UCU": return "ì„¸ë¦°";
 			//UC*
-			case "UUA": case "UUG": return "·ù½Å";
-			case "UUC": case "UUU": return "Æä´Ò¾Ë¶ó´Ñ";
+			case "UUA": case "UUG": return "ë¥˜ì‹ ";
+			case "UUC": case "UUU": return "í˜ë‹ì•Œë¼ë‹Œ";
 			//UU*
 			//U**
 			default: return "";
 		}
 	}
 	
-	public String decode() throws Exception {
-		if (!isValid())
-			throw new Exception("Invalid input");
-
-		input = input.substring(startIndex, endIndex + 2);
-		transcript();
+	public String decode(){
+		if(!isValid()) return "InValid Input\n";
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < input.length(); i += 3) {
 			builder.append(codon(input.substring(i, i + 2)));
-			if(i != input.length() - 1) builder.append('-'); 
+			if(i != input.length() - 1) builder.append('\n'); 
 		}
 		return builder.toString();
 	}
