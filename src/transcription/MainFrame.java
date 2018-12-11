@@ -10,8 +10,6 @@ public class MainFrame extends JFrame{
 		Container container = getContentPane();
 		setSize(900,700);
 		setLayout(null);
-		
-		ImageIcon backgroundImg = new ImageIcon("images/DNA.jpg");
 				
 		Font titleFont = new Font("D2Coding", Font.BOLD, 20);
 		Font basicFont = new Font("D2Coding", Font.PLAIN, 14);
@@ -47,10 +45,11 @@ public class MainFrame extends JFrame{
 		finalLabel.setFont(basicFont);
 		
 		JTextArea finalProtein = new JTextArea();
-		finalProtein.setBounds(200,250,260,360);
+		finalProtein.setBounds(200,250,588,360);
 		
-		JLabel imageLabel = new JLabel(backgroundImg);
-		imageLabel.setBounds(500,230,270,400);
+		JButton clearBtn = new JButton("Clear");
+		clearBtn.setFont(basicFont);
+		clearBtn.setBounds(70,400,100,100);
 		
 		container.add(EnterLabel);
 		container.add(tripletFirstPrimeLabel);
@@ -61,29 +60,33 @@ public class MainFrame extends JFrame{
 		container.add(codonLastPrimeLabel);
 		container.add(finalLabel);
 		container.add(finalProtein);
-		container.add(imageLabel);
+		container.add(clearBtn);
 		
-		GeneticDecoder geneticDecoder = new GeneticDecoder();
 		
-	tripletTokenTField.addActionListener(new ActionListener() {
+		
+		
+		tripletTokenTField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) { // Enter 누르면 Action 이벤트 발생
 				JTextField text = (JTextField)e.getSource();
-				geneticDecoder.setInputValue(text.getText()); // Input 값 넣어줌
-				codonTokenTField.setText(geneticDecoder.transcript());
+				codonTokenTField.setText(GeneticDecoder.convert(text.getText(), GeneticDecoder.InputType.DNA));
 			}
-			
 		});
 	
-	codonTokenTField.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) { // Enter 누르면 Action 이벤트 발생
-			JTextField text = (JTextField)e.getSource();
-			geneticDecoder.setInputValue(text.getText()); // Input 값 넣어줌
-			System.out.print(geneticDecoder.decode());
-		}
+		codonTokenTField.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { // Enter 누르면 Action 이벤트 발생
+				JTextField text = (JTextField)e.getSource();
+				finalProtein.setText(GeneticDecoder.decode(text.getText()));
+			}
+		});
 		
-	});
+		clearBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) { // Enter 누르면 Action 이벤트 발생
+				finalProtein.setText("");
+			}
+		});
 		
 		setFocusable(true);
 		requestFocus();

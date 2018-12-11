@@ -2,75 +2,52 @@ package transcription;
 
 public class GeneticDecoder {
 	private static final String[] TerminationCodons = { "UAA", "UAG", "UGA" };
-	private int startIndex, endIndex;
-	private String input;
+	public enum InputType { DNA, mRNA }
 
-	public GeneticDecoder() {}
-
-	public void setInputValue(String input) { this.input = input.toUpperCase();}
-
-	private Boolean isValid() {
-		if (input == null) {
-			System.out.println("NULL 오류");
-			return false; // input값이 지정되지 않은 경우 false 반환
+	public static Boolean baseOnly(String input, InputType type) { // type 1 : 전사(transcript), type 2 : 번역(translate)
+		if(type.equals(InputType.DNA)) {
+			for (int i = 0; i < input.length(); i++)
+				if (!(input.charAt(i) == 'A' || input.charAt(i) == 'G' || input.charAt(i) == 'C' || input.charAt(i) == 'T'))
+					return false;
 		}
-		if (!onlyAGCT()) {
-			System.out.println("AGTC 오류");
-			return false; // AGCT 이외의 문자가 포함된 경우 false 반환
-		}
-		if ((startIndex = findInitCodonIdx()) == -1) {
-			System.out.println("개시 코돈 오류");
-			return false; // 개시 코돈이 없을 경우 false 반환
-		}
-		if ((endIndex = findTermCodonIdx()) == -1) {
-			System.out.println("종결 코돈 오류");
-			return false; // 종결 코돈이 없을 경우 false 반환
+		else {
+			for (int i = 0; i < input.length(); i++)
+				if (!(input.charAt(i) == 'A' || input.charAt(i) == 'G' || input.charAt(i) == 'C' || input.charAt(i) == 'U'))
+					return false;
 		}
 		
 		return true;
 	}
-	private Boolean onlyAGCT() {
-		for (int i = 0; i < input.length(); i++)
-			if (!(input.charAt(i) == 'A' || input.charAt(i) == 'G' || input.charAt(i) == 'C' || input.charAt(i) == 'T'))
-				return false;
-		
-		return true;
-	}
-	private int findInitCodonIdx() { return input.indexOf("AUG"); }
-	private int findTermCodonIdx() {
+	private static int findInitCodonIdx(String input) { return input.indexOf("AUG"); }
+	private static int findTermCodonIdx(String input) {
 		int idx = -1;
 
 		for (String codon : TerminationCodons) {
 			int temp = input.indexOf(codon);
-			if (temp != -1 && temp < idx)
-				idx = temp;
+			if(idx == -1) idx = temp;
+			else if(temp != -1 && temp < idx) idx = temp;
 		}
-
 		return idx;
 	}
 	
-	public String transcript() {
+	public static String convert(String input, InputType type) {
+		if(!baseOnly(input, type)) return "Invalid Input";
+		
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < input.length(); i++)
-			switch (input.charAt(i)) {
-				case 'A': builder.append('U'); break;
-				case 'G': builder.append('C'); break;
-				case 'C': builder.append('G'); break;
-				case 'T': builder.append('A'); break;
-			}
-//			if(input.charAt(i)=='A') builder.append('U');
-//			else if(input.charAt(i)=='G') builder.append('C');
-//			else if(input.charAt(i)=='C') builder.append('G');
-//			else if(input.charAt(i)=='T') builder.append('A');
-//			
+			for (int i = 0; i < input.length(); i++)
+				switch (input.charAt(i)) {
+					case 'A': builder.append('U'); break;
+					case 'G': builder.append('C'); break;
+					case 'C': builder.append('G'); break;
+					case 'T': case 'U': builder.append('A'); break;
+				}
 		input = builder.toString();
 		return input;
-		}
-
-	private String codon(String code) {
+	}
+	
+	private static String codon(String code) {
 		switch (code) {
-			case "AAA": 
-			case "AAG": return "라이신";
+			case "AAA": case "AAG": return "라이신";
 			case "AAC": case "AAU": return "아스파라긴";
 			//AA*
 			case "AGA": case "AGG": return "아르지닌";
@@ -119,12 +96,20 @@ public class GeneticDecoder {
 		}
 	}
 	
-	public String decode(){
-		if(!isValid()) return "InValid Input\n";
+	public static String decode(String input){
+		input = convert(input, InputType.mRNA);
+		
+		int initCodonIdx = findInitCodonIdx(input);
+		int termCodonIdx = findTermCodonIdx(input);
+		
+		if(initCodonIdx == -1 || termCodonIdx == -1) return "InValid Input\n";
+		
+		input = input.substring(initCodonIdx, termCodonIdx + 3);
+		
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < input.length(); i += 3) {
-			builder.append(codon(input.substring(i, i + 2)));
-			if(i != input.length() - 1) builder.append('\n'); 
+			builder.append(codon(input.substring(i, i + 3)));
+			if(i < input.length() - 3) builder.append('-'); 
 		}
 		return builder.toString();
 	}
