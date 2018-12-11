@@ -45,7 +45,7 @@ public class GeneticDecoder {
 		return input;
 	}
 	
-	private static String codon(String code) {
+	private static String codon(String code) { 
 		switch (code) {
 			case "AAA": case "AAG": return "라이신";
 			case "AAC": case "AAU": return "아스파라긴";
