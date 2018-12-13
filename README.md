@@ -2,6 +2,7 @@
 DNA의 전사(transcription), 번역(translation) 과정을 시뮬레이션하는 소규모 개인 프로젝트입니다.
 
 자세한 배경 지식은 Wiki에 명시해놓았으니, 참조부탁드립니다.
+https://github.com/jmk1806/PersonalProgramming/wiki
 
 프로그램의 진행 과정
 input : DNA(트리플렛 코드), 혹은 mRNA(코돈)
@@ -16,3 +17,4 @@ DNA를 입력할 때에는 반드시 5'-부터 입력해주셔야합니다. 즉,
 1의 과정에서 DNA만 빠지고, 나머지 부분은 동일합니다.
 
 개발 환경과 프로그래밍 규약 또한 Wiki에 명시되어 있으니, 만약 이와 관련하여 확인이 필요하다면 Wiki 확인 부탁드립니다.
+https://github.com/jmk1806/PersonalProgramming/wiki
